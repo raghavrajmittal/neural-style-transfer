@@ -1,11 +1,11 @@
-#Neural Style Transfer with OpenCV
+# Neural Style Transfer with OpenCV
 
 Credit:
   - Adrian Rosebrock
   - https://www.pyimagesearch.com/2018/08/27/neural-style-transfer-with-opencv/
 
 
-###Applying neural style transfer to images and videos(real-time using webcam).
+### Applying neural style transfer to images and videos(real-time using webcam).
    - Makes use of openCV and Python
    - imutils?
 
