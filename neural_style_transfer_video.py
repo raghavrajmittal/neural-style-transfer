@@ -27,8 +27,10 @@ models = list(zip(range(0, len(modelPaths)), (modelPaths)))
 
 # use the cycle function of itertools that can loop over all model
 # paths, and then when the end is reached, restart again
-modelIter = itertools.cycle(models)
-(modelID, modelPath) = next(modelIter)
+# modelIter = itertools.cycle(models)
+# (modelID, modelPath) = next(modelIter)
+idx = 0
+(modelID, modelPath) = models[idx % len(models)]
 
 # load the neural style transfer model from disk
 print("[INFO] loading style transfer model...")
@@ -40,14 +42,14 @@ vs = VideoStream(src=0).start()
 time.sleep(2.0)
 print("[INFO] {}. {}".format(modelID + 1, modelPath))
 
+originalCount, styledCount = 0,0
 # loop over frames from the video file stream
 while True:
 	# grab the frame from the threaded video stream
 	frame = vs.read()
 
 	# resize the frame to have a width of 600 pixels (while
-	# maintaining the aspect ratio), and then grab the image
-	# dimensions
+	# maintaining the aspect ratio), and then grab the image dimensions
 	frame = imutils.resize(frame, width=600)
 	orig = frame.copy()
 	(h, w) = frame.shape[:2]
@@ -68,19 +70,50 @@ while True:
 	output /= 255.0
 	output = output.transpose(1, 2, 0)
 
-	# show the original frame along with the output neural style
-	# transfer
+	# show the original frame along with the output neural style transfer
 	cv2.imshow("Input", frame)
 	cv2.imshow("Output", output)
+
 	key = cv2.waitKey(1) & 0xFF
 
-	# if the `n` key is pressed (for "next"), load the next neural
-	# style transfer model
+	# if the `n` key is pressed (for "next"), load the next neural style transfer model
 	if key == ord("n"):
-		# grab the next nueral style transfer model model and load it
-		(modelID, modelPath) = next(modelIter)
+		# (modelID, modelPath) = next(modelIter)
+		idx += 1
+		(modelID, modelPath) = models[idx % len(models)]
+		cv2.putText(frame, str(modelPath.split('/')[-1].split(".")[0]) ,(10,40), cv2.FONT_HERSHEY_TRIPLEX, 1, (255,255,255) , 2)
+		cv2.imshow("Input", frame)
+		cv2.waitKey(20)
 		print("[INFO] {}. {}".format(modelID + 1, modelPath))
 		net = cv2.dnn.readNetFromTorch(modelPath)
+
+	# if the `p` key is pressed (for "previous"), load the previous neural style transfer model
+	elif key == ord("p"):
+		idx -= 1
+		(modelID, modelPath) = models[idx % len(models)]
+		cv2.putText(frame, str(modelPath.split('/')[-1].split(".")[0]) ,(10,40), cv2.FONT_HERSHEY_TRIPLEX, 1, (255,255,255) , 2)
+		cv2.imshow("Input", frame)
+		cv2.waitKey(20)
+		print("[INFO] {}. {}".format(modelID + 1, modelPath))
+		net = cv2.dnn.readNetFromTorch(modelPath)
+	# save the actual image
+	elif key == ord("a"):
+		originalCount += 1
+		cv2.imwrite( 'screenshots/original_' + str(originalCount) + ".png", frame)
+
+	#save the styled image
+	elif key == ord("s"):
+		styledCount += 1
+		output *= 255.0
+		cv2.imwrite('screenshots/styled_' + str(styledCount) + "_" + str(modelPath.split('/')[-1].split(".")[0]) + ".png", output)
+
+	#save both the images
+	elif key == ord("b"):
+		styledCount = max(styledCount + 1, originalCount + 1)
+		originalCount = styledCount
+		output *= 255.0
+		cv2.imwrite('screenshots/original_' + str(originalCount) + "_" + str(modelPath.split('/')[-1].split(".")[0]) + ".png", frame)
+		cv2.imwrite('screenshots/styled_' + str(styledCount) + "_" + str(modelPath.split('/')[-1].split(".")[0]) + ".png", output)
 
 	# otheriwse, if the `q` key was pressed, break from the loop
 	elif key == ord("q"):
