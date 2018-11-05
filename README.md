@@ -15,8 +15,12 @@ Credit:
 
 **Running style transfer on webcam video** <br/>
     $ python neural_style_transfer_video.py --models models<br/>
-    - Press 'N' key to dynamically change style<br/>
-    - Press 'Q' key to quit<br/>
+    - Press 'N' to go to next style<br/>
+    - Press 'P' to go to previous style
+    - Press 'A' to save the actual image (in screenshots folder)
+    - Press 'S' to save the styled image
+    - Press 'B' to save both (actual and styled iamges)
+    - Press 'Q' to quit<br/>
 
 **Running all style transfers on one image** <br/>
     $ python neural_style_transfer_examine.py --models models --image images/giraffe.jpg<br/>
