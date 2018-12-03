@@ -17,7 +17,7 @@ An example is shown:
 
 Original Image (Tech Tower, Georgia Tech): ![Original](screenshots/original_the_scream.png)
 
-Syled Image (Styled, using Edvard Munch's [*The Scream*](https://www.edvardmunch.org/the-scream.jsp): ![Styled](screenshots/styled_the_scream.png)
+Syled Image (Styled, using Edvard Munch's [*The Scream*](https://www.edvardmunch.org/the-scream.jsp)): ![Styled](screenshots/styled_the_scream.png)
 
 **Running style transfer on one image** <br/>
     $ python neural_style_transfer.py --image images/jurassic_park.jpg --model models/instance_norm/the_scream.t7
